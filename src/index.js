@@ -1,56 +1,3 @@
-/*
-Description
-In this exercise we explore a multi-user experience most commonly found on social media apps like Instagram, where users can see and interact with other users.
-
-In the template folder you will find examples of the HTML that you can use as a reference to build the exercise, the classes are connected to styles/index.css. Start at 1-root.html.
-
-
-Ignore the preview feature in the example, we've replaced that feature with an adding likes feature instead (this is not shown in any of the templates so you'll have to add the HTML and style it as you see fit).
-
-Deliverables
-- A user can select the user they want to post or comment as
-
-top bar - where users can select which user they want to be 
-
-- From the create a post section, a user can:
-    - Enter a post's image URL
-    - Enter a post's title
-    - Enter a post's content
-    - Create a post and view it in the feed
-- From the feed section, a user can:
-    - View a post and the owner of the post
-    - View a posts' comments and the owner of the comments
-    - Add a comment to a post
-  - Add a like to a post
-
-
-Instructions
-- Download the .zip file from https://codesandbox.io/s/js-instagram-exercise-starter-template-6vfoj
-- Run your json-server with json-server --watch db/db.json --routes db/routes.json --static .; notice --static . this is an alternative to using Live Server, you'll be able to view your app on http://localhost:3000/
-- Create a fetch function to get data
-- Create render functions to show data
-- Use event listeners and fetch to create and update data on the server
-
-Tips
-- In this exercise focus on practicing Javascript and fetch requests, take your time.
-- Keep track of the currentUser in a global variable so that you have access to their id in all your functions.
-- Think about conditional rendering when creating the preview feature.
-*/
-
-/* <div id="root">
-
-    <!-- Go to 2-header-section.html -->
- 
-  
-    <!-- Go to 3-header-section.html -->
-
-</div> */
-
-// firstly we make the above html in js
-// link that to id root in the html
-// query selector to find it
-// then append
-
 function createEl(tag) {
   return document.createElement(tag);
 }
@@ -63,7 +10,7 @@ console.log(rootEl);
 //////// header section ////////
 
 const headerEl = createEl("header");
-headerEl.setAttribute("class", ".main-header");
+headerEl.setAttribute("class", "main-header");
 
 const mainEl = createEl("main");
 mainEl.setAttribute("class", "wrapper");
@@ -72,7 +19,7 @@ rootEl.append(headerEl, mainEl);
 
 ///////////////////////////////////
 
-//////// create user section /////
+//////// create user section - getting the date from server on line 185 // appended to headerEl///
 
 function createUserSection(users) {
   const divEl = createEl("div");
@@ -93,9 +40,9 @@ function createUserSection(users) {
       const nameEl = createEl("span");
       nameEl.innerText = person.username;
 
-      avatarSmallEl.append(imgEl, nameEl);
+      avatarSmallEl.append(imgEl);
 
-      chipEl.append(avatarSmallEl);
+      chipEl.append(avatarSmallEl, nameEl);
 
       divEl.append(chipEl);
     }
@@ -107,7 +54,7 @@ function createUserSection(users) {
 
 ///////////////////////////////////
 
-//////// create post section /////
+//////// create post section // appended to main ///
 
 const createPostSectionEl = createEl("section");
 createPostSectionEl.setAttribute("class", "create-post-section");
@@ -118,7 +65,7 @@ feedEl.setAttribute("class", "feed");
 
 ///////////////////////////////////
 
-////// create post section //////
+////// create create post section (form)  // form appended to createPostSectionEl which is appended to main ////
 
 function createCreatePostSection() {
   const formEl = createEl("form");
@@ -178,9 +125,6 @@ function createCreatePostSection() {
   );
 
   createPostSectionEl.append(formEl);
-
-  // <button id="preview-btn" type="button">Preview</button>
-  //       <button type="submit">Post</button>
 }
 
 ///////////////////////////////////
@@ -229,17 +173,17 @@ function createPostSection(postData) {
 //   <span>Salvador Dali</span>
 // </div> */}
 
-//// speaking to server section - getting user data//////
+//// speaking to server section - getting user data //////
 
 let users = [];
 
 fetch(`http://localhost:3000/users`)
   .then(function (response) {
-    console.log(response);
+    console.log("json raw data info: ", response);
     return response.json();
   })
   .then(function (userData) {
-    console.log(userData);
+    console.log("user date from first fetch: ", userData);
     createUserSection(userData);
     users = userData;
   });
@@ -250,14 +194,14 @@ createCreatePostSection();
 
 //// this is geting post data ////
 
-//1. Get the post data, be able to use that data in a create posat function
+//1. Get the post data, be able to use that data in a create post function
 
 fetch(`http://localhost:3000/posts`)
   .then(function (response) {
     return response.json();
   })
   .then(function (postData) {
-    console.log("This is post data: ", postData);
+    console.log("This is post data from second fetch: ", postData);
     createPostSection(postData);
-    console.log("this is users data :", users);
+    console.log("this is users data from second fetch: ", users);
   });
