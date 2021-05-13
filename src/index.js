@@ -1,114 +1,121 @@
-function createEl(tag) {
-  return document.createElement(tag);
-}
+//// starting again on my own - following Nico's video ////
 
-////////
+////////////////////////////////////////////////////////////////////
+//// query root to create bridge between the below and the html ////
 
 const rootEl = document.querySelector("#root");
 console.log(rootEl);
 
-//////// header section ////////
+////////////////////////////////////////////////////////////////////
+//created header and main element///appended to root el////////
 
-const headerEl = createEl("header");
-headerEl.setAttribute("class", "main-header");
+/// function to create header section /////
 
-const mainEl = createEl("main");
-mainEl.setAttribute("class", "wrapper");
+function createHeaderSection() {
+  const headerEl = document.createElement("header");
+  headerEl.setAttribute("class", "main-header");
 
-rootEl.append(headerEl, mainEl);
+  const wrapperEl = document.createElement("div");
+  wrapperEl.setAttribute("class", " header wrapper");
 
-///////////////////////////////////
-
-//////// create user section - getting the date from server on line 185 // appended to headerEl///
-
-function createUserSection(users) {
-  const divEl = createEl("div");
-  divEl.setAttribute("class", "wrapper");
-
-  for (person of users) {
-    function createUser(person) {
-      const chipEl = createEl("div");
-      chipEl.setAttribute("class", "chip");
-
-      const avatarSmallEl = createEl("div");
-      avatarSmallEl.setAttribute("class", "avatar-small");
-
-      const imgEl = createEl("img");
-      imgEl.setAttribute("src", person.avatar);
-      imgEl.setAttribute("alt", person.username);
-
-      const nameEl = createEl("span");
-      nameEl.innerText = person.username;
-
-      avatarSmallEl.append(imgEl);
-
-      chipEl.append(avatarSmallEl, nameEl);
-
-      divEl.append(chipEl);
-    }
-    createUser(person);
-  }
-
-  headerEl.append(divEl);
+  headerEl.append(wrapperEl);
+  rootEl.append(headerEl);
 }
 
-///////////////////////////////////
+/// function to create main section /////
 
-//////// create post section // appended to main ///
+function createMainSection() {
+  const mainEl = document.createElement("main");
+  mainEl.setAttribute("class", "wrapper");
 
-const createPostSectionEl = createEl("section");
-createPostSectionEl.setAttribute("class", "create-post-section");
-mainEl.append(createPostSectionEl);
+  const postSectionEl = document.createElement("section");
+  postSectionEl.setAttribute("class", "create-post-section");
 
-const feedEl = createEl("section");
-feedEl.setAttribute("class", "feed");
+  const feedSectionEl = document.createElement("section");
+  feedSectionEl.setAttribute("class", "feed");
 
-///////////////////////////////////
+  mainEl.append(postSectionEl, feedSectionEl);
+  rootEl.append(mainEl);
+}
 
-////// create create post section (form)  // form appended to createPostSectionEl which is appended to main ////
+////////////////////////////////////////////////////////////////////
+/////////////////below is header section////////////////////////////
+
+/////////////////creating a function that makes one chip///////////
+
+function createUserChip(user) {
+  const chipEl = document.createElement("div");
+  chipEl.setAttribute("class", "chip");
+
+  const avatarEl = document.createElement("div");
+  avatarEl.setAttribute("class", "avatar-small");
+
+  const imgEl = document.createElement("img");
+  imgEl.setAttribute("src", user.avatar);
+  imgEl.setAttribute("alt", user.username);
+
+  avatarEl.append(imgEl);
+
+  const nameEl = document.createElement("span");
+  nameEl.innerText = user.username;
+
+  chipEl.append(avatarEl, nameEl);
+
+  const wrapperEl = document.querySelector(".header.wrapper");
+
+  wrapperEl.append(chipEl);
+}
+
+/////////////creating a function that loops and makes all chips//////
+
+function createUserChips(users) {
+  for (const user of users) createUserChip(user);
+}
+
+//////// create create post section (form)  // form appended to postSectionEl which is appended to main ////
 
 function createCreatePostSection() {
-  const formEl = createEl("form");
+  const formEl = document.createElement("form");
   formEl.setAttribute("id", "create-post-form");
   formEl.setAttribute("autocomplete", "off");
 
-  const titleEl = createEl("h2");
+  const titleEl = document.createElement("h2");
   titleEl.innerText = "Create A Post";
 
-  const labelForImageEl = createEl("label");
+  const labelForImageEl = document.createElement("label");
   labelForImageEl.setAttribute("for", "image");
   labelForImageEl.innerText = "Image URL";
-  const inputForImageEl = createEl("input");
+  const inputForImageEl = document.createElement("input");
   inputForImageEl.setAttribute("id", "image");
   inputForImageEl.setAttribute("name", "image");
   inputForImageEl.setAttribute("type", "text");
 
-  const labelForTitleEl = createEl("label");
+  const labelForTitleEl = document.createElement("label");
   labelForTitleEl.setAttribute("for", "title");
   labelForTitleEl.innerText = "Title";
-  const inputForTitleEl = createEl("input");
+  const inputForTitleEl = document.createElement("input");
   inputForTitleEl.setAttribute("id", "title");
   inputForTitleEl.setAttribute("name", "title");
   inputForTitleEl.setAttribute("type", "text");
 
-  const labelForTextAreaEl = createEl("label");
+  const labelForTextAreaEl = document.createElement("label");
   labelForTextAreaEl.setAttribute("for", "content");
   labelForTextAreaEl.innerText = "Content";
-  const textAreaEL = createEl("textarea");
+  const textAreaEL = document.createElement("textarea");
   textAreaEL.setAttribute("id", "content");
   textAreaEL.setAttribute("name", "content");
   textAreaEL.setAttribute("rows", "2");
   textAreaEL.setAttribute("columns", "30");
 
-  const actionDivEl = createEl("div");
+  const actionDivEl = document.createElement("div");
   actionDivEl.setAttribute("class", "action-btns");
 
-  const previewBtnEl = createEl("button");
+  const previewBtnEl = document.createElement("button");
   previewBtnEl.innerText = "Preview";
   previewBtnEl.setAttribute("id", "preview-btn");
   previewBtnEl.setAttribute("type", "button");
 
-  const submitBtnEl = createEl("button");
+  const submitBtnEl = document.createElement("button");
   submitBtnEl.setAttribute("type", "submit");
   submitBtnEl.innerText = "Post";
 
@@ -123,85 +130,29 @@ function createCreatePostSection() {
     textAreaEL,
     actionDivEl
   );
-
-  createPostSectionEl.append(formEl);
+  const postSectionEl = document.querySelector("section");
+  postSectionEl.append(formEl);
 }
 
-///////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
-////////// feed section ///////
+///////////////// creating feed section ///////////
 
-function createPostSection(postData) {
-  for (post of postData) {
-    const listItemEl = createEl("li");
+/////////creating a function to talk to database to get users//////
 
-    const chipEl = createEl("div");
-    chipEl.setAttribute("class", "chip");
-
-    const avatarSmallEl = createEl("div");
-    avatarSmallEl.setAttribute("class", "avatar-small");
-
-    const imgEl = createEl("img");
-    imgEl.setAttribute("src", person.avatar);
-    imgEl.setAttribute("alt", person.username);
-
-    const nameEl = createEl("span");
-    nameEl.innerText = person.username;
-
-    users.avatar;
-  }
+function getUsers() {
+  return fetch("http://localhost:3000/users")
+    .then(function (Response) {
+      return Response.json();
+    })
+    .then(function (users) {
+      createUserChips(users);
+    });
 }
 
-// "id": 1,
-// "title": "A tree in blossom",
-// "content": "Spring is finally here... I just love the colours.",
-// "image": {
-// "src": "https://images.unsplash.com/photo-1616745309504-0cb79e9ae590?ixid=MXwxMjA3fDB8MHx0b3BpYy1mZWVkfDI0fDZzTVZqVExTa2VRfHxlbnwwfHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-// "alt": "a tree in blossom"
-// },
-// "likes": 0,
-// "userId": 1
+/////////calling above functions//////
 
-// {/* <li class="post">
-// <div class="chip active">
-//   <div class="avatar-small">
-//     <img
-//       src="https://uploads5.wikiart.org/images/salvador-dali.jpg!Portrait.jpg"
-//       alt="Salvador Dali"
-//     />
-//   </div>
-//   <span>Salvador Dali</span>
-// </div> */}
-
-//// speaking to server section - getting user data //////
-
-let users = [];
-
-fetch(`http://localhost:3000/users`)
-  .then(function (response) {
-    console.log("json raw data info: ", response);
-    return response.json();
-  })
-  .then(function (userData) {
-    console.log("user date from first fetch: ", userData);
-    createUserSection(userData);
-    users = userData;
-  });
-
+createHeaderSection();
+createMainSection();
 createCreatePostSection();
-
-////////////////////////////////////////////
-
-//// this is geting post data ////
-
-//1. Get the post data, be able to use that data in a create post function
-
-fetch(`http://localhost:3000/posts`)
-  .then(function (response) {
-    return response.json();
-  })
-  .then(function (postData) {
-    console.log("This is post data from second fetch: ", postData);
-    createPostSection(postData);
-    console.log("this is users data from second fetch: ", users);
-  });
+getUsers();
