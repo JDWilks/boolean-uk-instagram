@@ -1,158 +1,107 @@
-//// starting again on my own - following Nico's video ////
+//////// Jonathons instagram code start /////
 
-////////////////////////////////////////////////////////////////////
-//// query root to create bridge between the below and the html ////
+// i've completely ****** this exercise up
+// I started with Duncan - js code is in the files
+// i then restarted following along with Nico's video
+// this afternoon i thought i'd start again and totally can't see why my for loop...
+// ... is not working
+// i'm going to get some rest for the rest of the weekend and hope that various...
+//... things i've learned have stuck going into next week
+
+{
+  /* <div id="root">
+  <header class="main-header">
+    <!-- Go to 2-header-section.html -->
+  </header>
+  <main class="wrapper">
+    <!-- Go to 3-header-section.html -->
+  </main>
+</div> */
+}
+
+// first finding root in the html ///
 
 const rootEl = document.querySelector("#root");
 console.log(rootEl);
 
-////////////////////////////////////////////////////////////////////
-//created header and main element///appended to root el////////
+/// making the header and main to link to root ////
 
-/// function to create header section /////
+const headerEl = document.createElement("header");
+headerEl.setAttribute("class", "main-header");
 
-function createHeaderSection() {
-  const headerEl = document.createElement("header");
-  headerEl.setAttribute("class", "main-header");
+const wrapperEl = document.createElement("wrapper");
+wrapperEl.setAttribute("class", "main-header");
 
-  const wrapperEl = document.createElement("div");
-  wrapperEl.setAttribute("class", " header wrapper");
+rootEl.append(headerEl, wrapperEl);
 
-  headerEl.append(wrapperEl);
-  rootEl.append(headerEl);
-}
+//////// header and main created and linked to root ✅
 
-/// function to create main section /////
+// <div class="wrapper">
+// <div class="chip active">
+//   <div class="avatar-small">
+//     <img
+//       src="https://uploads5.wikiart.org/images/salvador-dali.jpg!Portrait.jpg"
+//       alt="Salvador Dali"
+//     />
+//   </div>
 
-function createMainSection() {
-  const mainEl = document.createElement("main");
-  mainEl.setAttribute("class", "wrapper");
+/// make one chip and hard code it  ✅
 
-  const postSectionEl = document.createElement("section");
-  postSectionEl.setAttribute("class", "create-post-section");
+function makeUserChip(user) {
+  const divEl = document.createElement("div");
+  divEl.setAttribute("class", "wrapper");
 
-  const feedSectionEl = document.createElement("section");
-  feedSectionEl.setAttribute("class", "feed");
-
-  mainEl.append(postSectionEl, feedSectionEl);
-  rootEl.append(mainEl);
-}
-
-////////////////////////////////////////////////////////////////////
-/////////////////below is header section////////////////////////////
-
-/////////////////creating a function that makes one chip///////////
-
-function createUserChip(user) {
   const chipEl = document.createElement("div");
-  chipEl.setAttribute("class", "chip");
+  chipEl.setAttribute("class", "chip active");
 
   const avatarEl = document.createElement("div");
   avatarEl.setAttribute("class", "avatar-small");
 
   const imgEl = document.createElement("img");
-  imgEl.setAttribute("src", user.avatar);
-  imgEl.setAttribute("alt", user.username);
+  imgEl.setAttribute(
+    "src",
+    "https://uploads5.wikiart.org/images/salvador-dali.jpg!Portrait.jpg"
+  );
+  imgEl.setAttribute("alt", "Salvador Dali");
 
   avatarEl.append(imgEl);
-
-  const nameEl = document.createElement("span");
-  nameEl.innerText = user.username;
-
-  chipEl.append(avatarEl, nameEl);
-
-  const wrapperEl = document.querySelector(".header.wrapper");
-
-  wrapperEl.append(chipEl);
+  chipEl.append(avatarEl);
+  divEl.append(chipEl);
+  headerEl.append(divEl);
 }
 
-/////////////creating a function that loops and makes all chips//////
+//////// get users array from server to be able to use this info ✅
 
-function createUserChips(users) {
-  for (const user of users) createUserChip(user);
+let users = [];
+
+fetch("http://localhost:3000/users")
+  .then(function (response) {
+    console.log("raw json data ", response);
+    return response.json();
+  })
+  .then(function (usersData) {
+    console.log("second fetch ", usersData);
+    users = usersData;
+  });
+
+// the above fetch is working becuase if i call users in the console i see all 3 objects within the array
+
+//// for loop to get each user from the users array to appear on header /// ❌
+
+// i've made a function that takes in users (array of data) as an arguement
+// it should then loop for every user of users
+// each time calling the makeUserChip function (which works)
+// it should be adding all 3 chips to the top header - its not
+
+function makeUsersChips(users) {
+  for (user of users) {
+    makeUserChip(user);
+  }
+  makeUsersChips(user);
 }
 
-//////// create create post section (form)  // form appended to postSectionEl which is appended to main ////
+console.log(makeUsersChips);
 
-function createCreatePostSection() {
-  const formEl = document.createElement("form");
-  formEl.setAttribute("id", "create-post-form");
-  formEl.setAttribute("autocomplete", "off");
+///// calling functions
 
-  const titleEl = document.createElement("h2");
-  titleEl.innerText = "Create A Post";
-
-  const labelForImageEl = document.createElement("label");
-  labelForImageEl.setAttribute("for", "image");
-  labelForImageEl.innerText = "Image URL";
-  const inputForImageEl = document.createElement("input");
-  inputForImageEl.setAttribute("id", "image");
-  inputForImageEl.setAttribute("name", "image");
-  inputForImageEl.setAttribute("type", "text");
-
-  const labelForTitleEl = document.createElement("label");
-  labelForTitleEl.setAttribute("for", "title");
-  labelForTitleEl.innerText = "Title";
-  const inputForTitleEl = document.createElement("input");
-  inputForTitleEl.setAttribute("id", "title");
-  inputForTitleEl.setAttribute("name", "title");
-  inputForTitleEl.setAttribute("type", "text");
-
-  const labelForTextAreaEl = document.createElement("label");
-  labelForTextAreaEl.setAttribute("for", "content");
-  labelForTextAreaEl.innerText = "Content";
-  const textAreaEL = document.createElement("textarea");
-  textAreaEL.setAttribute("id", "content");
-  textAreaEL.setAttribute("name", "content");
-  textAreaEL.setAttribute("rows", "2");
-  textAreaEL.setAttribute("columns", "30");
-
-  const actionDivEl = document.createElement("div");
-  actionDivEl.setAttribute("class", "action-btns");
-
-  const previewBtnEl = document.createElement("button");
-  previewBtnEl.innerText = "Preview";
-  previewBtnEl.setAttribute("id", "preview-btn");
-  previewBtnEl.setAttribute("type", "button");
-
-  const submitBtnEl = document.createElement("button");
-  submitBtnEl.setAttribute("type", "submit");
-  submitBtnEl.innerText = "Post";
-
-  actionDivEl.append(previewBtnEl, submitBtnEl);
-  formEl.append(
-    titleEl,
-    labelForImageEl,
-    inputForImageEl,
-    labelForTitleEl,
-    inputForTitleEl,
-    labelForTextAreaEl,
-    textAreaEL,
-    actionDivEl
-  );
-  const postSectionEl = document.querySelector("section");
-  postSectionEl.append(formEl);
-}
-
-////////////////////////////////////////////////////////////////////
-
-///////////////// creating feed section ///////////
-
-/////////creating a function to talk to database to get users//////
-
-function getUsers() {
-  return fetch("http://localhost:3000/users")
-    .then(function (Response) {
-      return Response.json();
-    })
-    .then(function (users) {
-      createUserChips(users);
-    });
-}
-
-/////////calling above functions//////
-
-createHeaderSection();
-createMainSection();
-createCreatePostSection();
-getUsers();
+makeUserChip();
